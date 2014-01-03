@@ -6,6 +6,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,8 +17,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class Coordinates implements ApplicationListener {
 
-    Texture dropImage;
-    Texture turretImage;
+    TextureRegion turretImage;
     Sound dropSound;
     Music rainMusic;
     OrthographicCamera camera;
@@ -30,7 +30,9 @@ public class Coordinates implements ApplicationListener {
 
     @Override
     public void create() {
-        turretImage = new Texture(Gdx.files.internal("turret.png"));
+        Texture turretTexture
+            = new Texture(Gdx.files.internal("turret.png"));
+        turretImage = new TextureRegion(turretTexture, 0, 0, 32, 32);
 
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
@@ -44,10 +46,10 @@ public class Coordinates implements ApplicationListener {
         batch = new SpriteBatch();
 
         turret = new Rectangle();
-        turret.x = WIDTH / 2 - turretImage.getWidth() / 2;
-        turret.y = HEIGHT / 2 - turretImage.getHeight() / 2;
-        turret.width = turretImage.getWidth();
-        turret.height = turretImage.getHeight();
+        turret.x = WIDTH / 2 - turretImage.getRegionWidth() / 2;
+        turret.y = HEIGHT / 2 - turretImage.getRegionHeight() / 2;
+        turret.width = turretImage.getRegionWidth();
+        turret.height = turretImage.getRegionHeight();
 
         // int originX = x - WIDTH / 2;
         // int originY = y + HEIGHT / 2;
@@ -82,18 +84,20 @@ public class Coordinates implements ApplicationListener {
 
         double angle = Math.atan2((HEIGHT-originY), originX);
         if (angle >= topRightAngle && angle < topLeftAngle) {
-            System.out.println("Facing upwards!");
+            turretImage.setRegionX(128);
         }
         if (angle >= topLeftAngle || angle < bottomLeftAngle) {
-            System.out.println("Facing left!");
+            turretImage.setRegionX(64);
         }
         if (angle >= bottomLeftAngle && angle < bottomRightAngle) {
-            System.out.println("Facing downwards!");
+            turretImage.setRegionX(0);
         }
         if (angle >= bottomRightAngle && angle <= 0
                 || angle < topRightAngle && angle > 0) {
-            System.out.println("Facing right!");
+            turretImage.setRegionX(192);
         }
+        turretImage.setRegionWidth(32);
+        turretImage.setRegionHeight(32);
     }
 
     @Override
