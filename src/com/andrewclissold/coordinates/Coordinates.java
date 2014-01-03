@@ -1,5 +1,7 @@
 package com.andrewclissold.coordinates;
 
+import java.lang.Math;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -15,18 +17,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class Coordinates implements ApplicationListener {
 
     Texture dropImage;
-    Texture bucketImage;
+    Texture turretImage;
     Sound dropSound;
     Music rainMusic;
     OrthographicCamera camera;
     SpriteBatch batch;
-    Rectangle bucket;
+    Rectangle turret;
+
+    int WIDTH = 800;
+    int HEIGHT = 480;
+    double topRightAngle, topLeftAngle, bottomLeftAngle, bottomRightAngle;
 
     @Override
     public void create() {
-        dropImage = new Texture(Gdx.files.internal("droplet.png"));
-        bucketImage = new Texture(Gdx.files.internal("bucket.png"));
-        System.out.println("dropImage's height: " + dropImage.getHeight());
+        turretImage = new Texture(Gdx.files.internal("turret.png"));
 
         dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
         rainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
@@ -35,15 +39,27 @@ public class Coordinates implements ApplicationListener {
         // rainMusic.play();
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 800, 480);
+        camera.setToOrtho(false, WIDTH, HEIGHT);
 
         batch = new SpriteBatch();
 
-        bucket = new Rectangle();
-        bucket.x = 800 / 2 - 64 / 2;
-        bucket.y = 20;
-        bucket.width = 64;
-        bucket.height = 64;
+        turret = new Rectangle();
+        turret.x = WIDTH / 2 - turretImage.getWidth() / 2;
+        turret.y = HEIGHT / 2 - turretImage.getHeight() / 2;
+        turret.width = turretImage.getWidth();
+        turret.height = turretImage.getHeight();
+
+        // int originX = x - WIDTH / 2;
+        // int originY = y + HEIGHT / 2;
+
+        // System.out.println("originX: " + originX);
+        // System.out.println("originY: " + originY);
+
+        topRightAngle = Math.atan2((HEIGHT-(HEIGHT/2)), WIDTH/2);
+        topLeftAngle = Math.atan2((HEIGHT-(HEIGHT/2)), -1*WIDTH/2);
+        bottomLeftAngle = -1*topLeftAngle;
+        bottomRightAngle = -1*topRightAngle;
+
     }
 
     @Override
@@ -55,23 +71,23 @@ public class Coordinates implements ApplicationListener {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(bucketImage, bucket.x, bucket.y);
+        batch.draw(turretImage, turret.x, turret.y);
         batch.end();
 
-        if (Gdx.input.isTouched()) {
-            Vector3 touchPos = new Vector3();
-            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touchPos);
-            bucket.x = touchPos.x - 64 / 2;
-        }
+        int x = Gdx.input.getX();
+        int y = Gdx.input.getY();
 
-        if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-            bucket.x -= 200 * Gdx.graphics.getDeltaTime();
-        }
-        if(Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            bucket.x += 200 * Gdx.graphics.getDeltaTime();
-        }
+        int originX = x - WIDTH / 2;
+        int originY = y + HEIGHT / 2;
 
+        double angle = Math.atan2((HEIGHT-originY), originX);
+        if (angle >= topRightAngle && angle < topLeftAngle) {
+            System.out.println("Facing upwards!");
+        }
+        if (angle >= bottomLeftAngle && angle < bottomRightAngle) {
+            System.out.println("Facing downwards!");
+        }
+        System.out.println("~");
     }
 
     @Override
