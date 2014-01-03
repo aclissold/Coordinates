@@ -108,7 +108,12 @@ public class Coordinates implements ApplicationListener {
 
     @Override
     public void resize(int width, int height) {
-
+        WIDTH = width;
+        HEIGHT = height;
+        topRightAngle = Math.atan2((HEIGHT-(HEIGHT/2)), WIDTH/2);
+        topLeftAngle = Math.atan2((HEIGHT-(HEIGHT/2)), -1*WIDTH/2);
+        bottomLeftAngle = -1*topLeftAngle;
+        bottomRightAngle = -1*topRightAngle;
     }
 
     @Override
