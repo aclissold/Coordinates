@@ -18,8 +18,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 public class Coordinates implements ApplicationListener {
 
     TextureRegion turretImage;
-    Sound dropSound;
-    Music rainMusic;
     OrthographicCamera camera;
     SpriteBatch batch;
     Rectangle turret;
@@ -34,12 +32,6 @@ public class Coordinates implements ApplicationListener {
             = new Texture(Gdx.files.internal("turret.png"));
         turretImage = new TextureRegion(turretTexture, 0, 0, 32, 32);
 
-        dropSound = Gdx.audio.newSound(Gdx.files.internal("drop.mp3"));
-        rainMusic = Gdx.audio.newMusic(Gdx.files.internal("music.mp3"));
-
-        // rainMusic.setLooping(true);
-        // rainMusic.play();
-
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
 
@@ -50,12 +42,6 @@ public class Coordinates implements ApplicationListener {
         turret.y = HEIGHT / 2 - turretImage.getRegionHeight() / 2;
         turret.width = turretImage.getRegionWidth();
         turret.height = turretImage.getRegionHeight();
-
-        // int originX = x - WIDTH / 2;
-        // int originY = y + HEIGHT / 2;
-
-        // System.out.println("originX: " + originX);
-        // System.out.println("originY: " + originY);
 
         topRightAngle = Math.atan2((HEIGHT-(HEIGHT/2)), WIDTH/2);
         topLeftAngle = Math.atan2((HEIGHT-(HEIGHT/2)), -1*WIDTH/2);
