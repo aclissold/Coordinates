@@ -84,10 +84,16 @@ public class Coordinates implements ApplicationListener {
         if (angle >= topRightAngle && angle < topLeftAngle) {
             System.out.println("Facing upwards!");
         }
+        if (angle >= topLeftAngle || angle < bottomLeftAngle) {
+            System.out.println("Facing left!");
+        }
         if (angle >= bottomLeftAngle && angle < bottomRightAngle) {
             System.out.println("Facing downwards!");
         }
-        System.out.println("~");
+        if (angle >= bottomRightAngle && angle <= 0
+                || angle < topRightAngle && angle > 0) {
+            System.out.println("Facing right!");
+        }
     }
 
     @Override
